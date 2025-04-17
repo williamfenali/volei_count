@@ -127,6 +127,25 @@
         flex-direction: column;
       }
     }
+
+    .score-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .score-button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .score-buttons {
+      display: flex;
+      gap: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -141,12 +160,14 @@
           <span id="nameA">Equipe A</span>
           <span class="edit-icon" onclick="editName('A')">✏️</span>
         </div>
-        <div class="score" id="scoreA">0</div>
-        <div class="sets">Sets vencidos: <span id="setsA">0</span></div>
-        <div class="buttons">
-          <button onclick="increment('A')">+1</button>
-          <button onclick="decrement('A')">-1</button>
+        <div class="score-container">
+          <div class="score-buttons">
+            <button onclick="decrement('A')">-1</button>
+            <div class="score" id="scoreA">0</div>
+            <button onclick="increment('A')">+1</button>
+          </div>
         </div>
+        <div class="sets">Sets vencidos: <span id="setsA">0</span></div>
       </div>
 
       <div class="team team-B">
@@ -154,12 +175,14 @@
           <span id="nameB">Equipe B</span>
           <span class="edit-icon" onclick="editName('B')">✏️</span>
         </div>
-        <div class="score" id="scoreB">0</div>
-        <div class="sets">Sets vencidos: <span id="setsB">0</span></div>
-        <div class="buttons">
-          <button onclick="increment('B')">+1</button>
-          <button onclick="decrement('B')">-1</button>
+        <div class="score-container">
+          <div class="score-buttons">
+            <button onclick="decrement('B')">-1</button>
+            <div class="score" id="scoreB">0</div>
+            <button onclick="increment('B')">+1</button>
+          </div>
         </div>
+        <div class="sets">Sets vencidos: <span id="setsB">0</span></div>
       </div>
 
     </div>
@@ -171,11 +194,12 @@
   </div>
 
   <script>
-  	if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('serviceWorker.js')
         .then(() => console.log("Service Worker registrado!"))
         .catch(err => console.error("Erro ao registrar:", err));
     }
+
     let scoreA = 0, scoreB = 0;
     let setsA = 0, setsB = 0;
     let nameA = "Equipe A";
