@@ -1,3 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Placar de Vôlei</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0984e3" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #dff9fb, #c7ecee);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 1rem;
+    }
+
+    .scoreboard {
+      background-color: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      color: #130f40;
+    }
+
+    .teams {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .team {
+      background-color: #f1f2f6;
+      border-radius: 1rem;
+      padding: 1rem;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    }
+
+    .team-A { border-left: 6px solid #3498db; }
+    .team-B { border-left: 6px solid #e74c3c; }
+
+    .team-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+
+    .edit-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      color: #636e72;
+    }
+
+    .edit-icon:hover {
+      color: #2d3436;
+    }
+
+    .score {
+      font-size: 2.5rem;
+      margin: 0.3rem 0;
+      color: #2d3436;
+    }
+
+    .sets {
+      font-size: 1rem;
+      color: #636e72;
+      margin-bottom: 0.5rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      background-color: #0984e3;
+      color: white;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0652dd;
+    }
+
+    .reset-btn {
+      background-color: #d63031;
+    }
+
+    .reset-btn:hover {
+      background-color: #b71c1c;
+    }
+
+    .set-btn {
+      background-color: #00b894;
+    }
+
+    .set-btn:hover {
+      background-color: #019875;
+    }
+
+    @media (max-width: 480px) {
+      .buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scoreboard">
+    <h1>Placar de Vôlei</h1>
+
+    <div class="teams">
+
+      <div class="team team-A">
+        <div class="team-name">
+          <span id="nameA">Equipe A</span>
+          <span class="edit-icon" onclick="editName('A')">✏️</span>
+        </div>
+        <div class="score" id="scoreA">0</div>
+        <div class="sets">Sets vencidos: <span id="setsA">0</span></div>
+        <div class="buttons">
+          <button onclick="increment('A')">+1</button>
+          <button onclick="decrement('A')">-1</button>
+        </div>
+      </div>
+
+      <div class="team team-B">
+        <div class="team-name">
+          <span id="nameB">Equipe B</span>
+          <span class="edit-icon" onclick="editName('B')">✏️</span>
+        </div>
+        <div class="score" id="scoreB">0</div>
+        <div class="sets">Sets vencidos: <span id="setsB">0</span></div>
+        <div class="buttons">
+          <button onclick="increment('B')">+1</button>
+          <button onclick="decrement('B')">-1</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="buttons" style="margin-top: 2rem;">
+      <button class="set-btn" onclick="finalizeSet()">Finalizar Set</button>
+      <button class="reset-btn" onclick="resetMatch()">Resetar Partida</button>
+    </div>
+  </div>
+
+  <script>
+  	if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('serviceWorker.js')
+        .then(() => console.log("Service Worker registrado!"))
+        .catch(err => console.error("Erro ao registrar:", err));
+    }
+    let scoreA = 0, scoreB = 0;
+    let setsA = 0, setsB = 0;
+    let nameA = "Equipe A";
+    let nameB = "Equipe B";
+
+    function saveToStorage() {
+      const data = {
+        scoreA,
+        scoreB,
+        setsA,
+        setsB,
+        nameA,
+        nameB
+      };
+      localStorage.setItem('placarVolei', JSON.stringify(data));
+    }
+
+    function loadFromStorage() {
+      const data = JSON.parse(localStorage.getItem('placarVolei'));
+      if (data) {
+        scoreA = data.scoreA;
+        scoreB = data.scoreB;
+        setsA = data.setsA;
+        setsB = data.setsB;
+        nameA = data.nameA || "Equipe A";
+        nameB = data.nameB || "Equipe B";
+      }
+    }
+
+    function updateDisplay() {
+      document.getElementById('scoreA').innerText = scoreA;
+      document.getElementById('scoreB').innerText = scoreB;
+      document.getElementById('setsA').innerText = setsA;
+      document.getElementById('setsB').innerText = setsB;
+      document.getElementById('nameA').innerText = nameA;
+      document.getElementById('nameB').innerText = nameB;
+      saveToStorage();
+    }
+
+    function increment(team) {
+      if (team === 'A') scoreA++;
+      else scoreB++;
+      updateDisplay();
+    }
+
+    function decrement(team) {
+      if (team === 'A' && scoreA > 0) scoreA--;
+      if (team === 'B' && scoreB > 0) scoreB--;
+      updateDisplay();
     }
 
     function finalizeSet() {
