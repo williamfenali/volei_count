@@ -8,21 +8,6 @@
   <meta name="theme-color" content="#0984e3" />
   <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 2rem;
-      background: #dfe6e9;
-    }
-    .scoreboard {
-      max-width: 500px;
-      margin: auto;
-      background: #fff;
-      border-radius: 10px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -143,10 +128,11 @@
       }
     }
   </style>
-  </style>
 </head>
 <body>
-  <h1>Placar de Vôlei</h1>
+
+  <div class="scoreboard">
+    <h1>Placar de Vôlei</h1>
 
     <div class="teams">
 
@@ -185,7 +171,7 @@
   </div>
 
   <script>
-    if ('serviceWorker' in navigator) {
+  	if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('serviceWorker.js')
         .then(() => console.log("Service Worker registrado!"))
         .catch(err => console.error("Erro ao registrar:", err));
@@ -287,5 +273,6 @@
     loadFromStorage();
     updateDisplay();
   </script>
+
 </body>
 </html>
